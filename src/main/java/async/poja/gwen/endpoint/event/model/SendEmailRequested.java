@@ -16,6 +16,7 @@ import lombok.ToString;
 @ToString
 public class SendEmailRequested extends PojaEvent {
   private String to;
+  private String nom;
 
   @Override
   public Duration maxConsumerDuration() {
