@@ -20,7 +20,8 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
-@RestController("/images")
+@RestController
+@RequestMapping("/images")
 @AllArgsConstructor
 public class ImageController {
 
