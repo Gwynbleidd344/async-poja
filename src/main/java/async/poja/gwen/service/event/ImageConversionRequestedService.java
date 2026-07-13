@@ -15,7 +15,7 @@ import lombok.SneakyThrows;
 import org.springframework.stereotype.Service;
 
 @Service
-@AllArgsConstructo
+@AllArgsConstructor
 public class ImageConversionRequestedService implements Consumer<ImageConversionRequested> {
 
   private final BucketComponent bucketComponent;
