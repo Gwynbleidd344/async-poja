@@ -15,7 +15,7 @@ import lombok.SneakyThrows;
 import org.springframework.stereotype.Service;
 
 @Service
-@AllArgsConstructor
+@AllArgsConstructo
 public class ImageConversionRequestedService implements Consumer<ImageConversionRequested> {
 
   private final BucketComponent bucketComponent;
@@ -38,7 +38,9 @@ public class ImageConversionRequestedService implements Consumer<ImageConversion
             + "Voici le lien pour télécharger votre image <b>"
             + event.getNomFichier()
             + "</b> en noir et blanc (valable 1h) :<br>"
-            + "<a href=\"" + presignedUrl + "\">Télécharger l'image</a>";
+            + "<a href=\""
+            + presignedUrl
+            + "\">Télécharger l'image</a>";
 
     var email =
         new Email(
