@@ -1,0 +1,140 @@
+openapi: 3.0.3
+info:
+  title: async-poja API
+  description: >
+    API exposant deux fonctionnalités asynchrones :
+    l'envoi d'un document PDF personnalisé par email, et la soumission
+    d'images pour conversion en noir et blanc envoyée par email.
+  version: 1.0.0
+
+servers:
+  - description: Local
+    url: http://localhost:8080
+  - description: Preprod
+    url: https://zhy2xztdvfbfzktskiae7gh4jm0lmktz.lambda-url.eu-west-3.on.aws
+
+tags:
+  - name: Hello
+    description: Génération et envoi asynchrone d'un PDF par email
+  - name: Images
+    description: Soumission et conversion asynchrone d'images en noir et blanc
+
+paths:
+  /hello:
+    get:
+      tags:
+        - Hello
+      summary: Déclenche l'envoi d'un email personnalisé avec un lien vers un PDF
+      description: >
+        Répond immédiatement, puis génère un PDF et envoie un email
+        contenant un lien de téléchargement temporaire (24h) de manière
+        asynchrone.
+      parameters:
+        - name: to
+          in: query
+          required: true
+          description: Adresse email du destinataire
+          schema:
+            type: string
+            format: email
+            example: jean.dupont@example.com
+        - name: nom
+          in: query
+          required: true
+          description: Nom utilisé pour personnaliser le message
+          schema:
+            type: string
+            example: Jean
+      responses:
+        "200":
+          description: Requête acceptée, email envoyé de façon asynchrone
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: "... world!"
+        "400":
+          description: Paramètres manquants ou invalides
+
+  /images:
+    post:
+      tags:
+        - Images
+      summary: Soumet une image pour conversion en noir et blanc
+      description: >
+        Enregistre la soumission en base de données de façon synchrone,
+        puis convertit l'image en noir et blanc et envoie un lien de
+        téléchargement temporaire par email de façon asynchrone.
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required:
+                - file
+                - email
+              properties:
+                file:
+                  type: string
+                  format: binary
+                  description: Image au format jpg, jpeg ou png
+                email:
+                  type: string
+                  format: email
+                  description: Adresse email du destinataire du résultat
+      responses:
+        "201":
+          description: Soumission enregistrée, conversion lancée en asynchrone
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ImageSubmission"
+        "400":
+          description: Fichier manquant, extension non autorisée, ou nom de fichier invalide
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+    get:
+      tags:
+        - Images
+      summary: Liste toutes les images soumises
+      responses:
+        "200":
+          description: Liste des soumissions
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/ImageSubmission"
+
+components:
+  schemas:
+    ImageSubmission:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          example: 3fa85f64-5717-4562-b3fc-2c963f66afa6
+        nomFichier:
+          type: string
+          example: logo2.png
+        email:
+          type: string
+          format: email
+          example: jean.dupont@example.com
+        createdAt:
+          type: string
+          format: date-time
+          example: "2026-07-13T10:15:30.123Z"
+
+    ErrorResponse:
+      type: object
+      properties:
+        message:
+          type: string
+          example: Seuls les fichiers jpg/jpeg/png sont acceptés
