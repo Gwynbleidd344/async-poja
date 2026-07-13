@@ -4,18 +4,18 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import java.time.Instant;
 import java.util.UUID;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.CreationTimestamp;
 
 @Entity
 @Table(name = "image_submission")
 @Getter
 @Setter
 @NoArgsConstructor
-@AllArgsConstructor
 public class ImageSubmission {
 
   @Id private UUID id;
@@ -25,4 +25,14 @@ public class ImageSubmission {
 
   @Column(nullable = false)
   private String email;
+
+  @CreationTimestamp
+  @Column(name = "created_at", nullable = false, updatable = false)
+  private Instant createdAt;
+
+  public ImageSubmission(UUID id, String nomFichier, String email) {
+    this.id = id;
+    this.nomFichier = nomFichier;
+    this.email = email;
+  }
 }
