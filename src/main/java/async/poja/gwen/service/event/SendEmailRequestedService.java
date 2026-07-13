@@ -33,9 +33,13 @@ public class SendEmailRequestedService implements Consumer<SendEmailRequested> {
     var presignedUrl = bucketComponent.presign(bucketKey, Duration.ofHours(24));
 
     var emailHtmlBody =
-        "Cher " + event.getNom() + ",<br><br>"
+        "Cher "
+            + event.getNom()
+            + ",<br><br>"
             + "Voici le lien pour télécharger votre document (valable 24h) : <br>"
-            + "<a href=\"" + presignedUrl + "\">Télécharger le PDF</a>";
+            + "<a href=\""
+            + presignedUrl
+            + "\">Télécharger le PDF</a>";
 
     var email =
         new Email(
