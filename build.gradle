@@ -25,7 +25,7 @@ repositories {
 }
 
 java {
-    group = 'com.example.demo'
+    group = 'async.poja.gwen'
     sourceCompatibility = '21'
     targetCompatibility = '21'
 }
